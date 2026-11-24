@@ -1,0 +1,100 @@
+services:
+  postgres:
+    image: postgres:14.24-alpine3.23
+    restart: "no"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ci_network
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: "no"
+    environment:
+      NODE_ENV: test
+      PORT: 3000
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB}
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      SEED_PRODUCTS: ${SEED_PRODUCTS}
+      SEED_ORDERS: ${SEED_ORDERS}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - ci_network
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    restart: "no"
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://127.0.0.1:80/health || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - ci_network
+
+  playwright:
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile
+    restart: "no"
+    environment:
+      CI: "true"
+      BASE_URL: http://ui
+      API_URL: http://api:3000
+      PLAYWRIGHT_WORKERS: 2
+      SEED_PRODUCTS: ${SEED_PRODUCTS}
+      SEED_ORDERS: ${SEED_ORDERS}
+    depends_on:
+      ui:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    volumes:
+      - ./artifacts/playwright-report:/artifacts/playwright-report
+      - ./artifacts/test-results:/artifacts/test-results
+    networks:
+      - ci_network
+    command: ["npx", "playwright", "test", "--grep", "@${TEST_TAG:-smoke}"]
+
+volumes:
+  postgres_data:
+
+networks:
+  ci_network:
+    driver: bridge

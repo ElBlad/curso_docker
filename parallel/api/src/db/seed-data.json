@@ -1,0 +1,102 @@
+{
+  "products": [
+    {
+      "id": "mug-01",
+      "name": "Stoneware mug",
+      "category": "Kitchen",
+      "price": 28,
+      "description": "Hand-thrown in small batches in the Pacific Northwest.",
+      "color": "bg-[#e9dfd0]",
+      "mark": "01"
+    },
+    {
+      "id": "linen-02",
+      "name": "Everyday linen",
+      "category": "Home",
+      "price": 64,
+      "description": "Soft, breathable linen woven to get better with time.",
+      "color": "bg-[#e3e8df]",
+      "mark": "02"
+    },
+    {
+      "id": "oil-03",
+      "name": "Olive oil cruet",
+      "category": "Kitchen",
+      "price": 42,
+      "description": "A beautifully balanced pourer made from recycled glass.",
+      "color": "bg-[#e9e3d3]",
+      "mark": "03"
+    },
+    {
+      "id": "basket-04",
+      "name": "Market basket",
+      "category": "Everyday",
+      "price": 86,
+      "description": "A sturdy, handwoven companion for everyday errands.",
+      "color": "bg-[#eaddd0]",
+      "mark": "04"
+    },
+    {
+      "id": "candle-05",
+      "name": "Cedar candle",
+      "category": "Living",
+      "price": 36,
+      "description": "A clean-burning soy candle with cedar and bergamot.",
+      "color": "bg-[#dce4df]",
+      "mark": "05"
+    },
+    {
+      "id": "bowl-06",
+      "name": "Serving bowl",
+      "category": "Kitchen",
+      "price": 58,
+      "description": "A generous, tactile bowl for meals made to be shared.",
+      "color": "bg-[#e6dfd8]",
+      "mark": "06"
+    }
+  ],
+  "orders": [
+    {
+      "id": "CG-1048",
+      "address": "1842 Alder Street, Portland, OR 97205",
+      "date": "2026-10-24",
+      "total": 122,
+      "status": "Processing",
+      "items": [
+        { "productId": "mug-01", "quantity": 2 },
+        { "productId": "oil-03", "quantity": 1 }
+      ]
+    },
+    {
+      "id": "CG-1047",
+      "address": "27 Cedar Lane, Seattle, WA 98109",
+      "date": "2026-10-23",
+      "total": 150,
+      "status": "Shipped",
+      "items": [
+        { "productId": "linen-02", "quantity": 1 },
+        { "productId": "candle-05", "quantity": 1 },
+        { "productId": "mug-01", "quantity": 1 }
+      ]
+    },
+    {
+      "id": "CG-1046",
+      "address": "610 Willow Avenue, San Francisco, CA 94110",
+      "date": "2026-10-22",
+      "total": 144,
+      "status": "Delivered",
+      "items": [
+        { "productId": "basket-04", "quantity": 1 },
+        { "productId": "bowl-06", "quantity": 1 }
+      ]
+    },
+    {
+      "id": "CG-1045",
+      "address": "93 Juniper Road, Austin, TX 78704",
+      "date": "2026-10-21",
+      "total": 64,
+      "status": "Processing",
+      "items": [{ "productId": "linen-02", "quantity": 1 }]
+    }
+  ]
+}
